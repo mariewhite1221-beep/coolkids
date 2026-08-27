@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Connect Four</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: #0f172a;
+      color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    .top-panel {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 440px;
+      padding: 10px 14px;
+    }
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #1e293b;
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid #334155;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .disc-indicator {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #ef4444;
+    }
+    .mode-switch {
+      display: flex;
+      background: #1e293b;
+      border-radius: 8px;
+      padding: 3px;
+      border: 1px solid #334155;
+    }
+    .mode-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .mode-btn.active {
+      background: #6366f1;
+      color: white;
+      font-weight: 700;
+    }
+    .board-wrap {
+      background: #1e40af;
+      padding: 12px;
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .col-row-select {
+      display: grid;
+      grid-template-columns: repeat(7, 46px);
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .col-arrow {
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #93c5fd;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .col-arrow.hover { opacity: 1; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(7, 46px);
+      grid-template-rows: repeat(6, 46px);
+      gap: 8px;
+      cursor: pointer;
+    }
+    .slot {
+      width: 46px;
+      height: 46px;
+      background: #0f172a;
+      border-radius: 50%;
+      box-shadow: inset 0 3px 6px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s;
+    }
+    .slot[data-p="1"] { background: #ef4444; }
+    .slot[data-p="2"] { background: #eab308; }
+    .slot.win {
+      animation: pulseWin 0.6s infinite alternate;
+      border: 3px solid #ffffff;
+    }
+    @keyframes pulseWin {
+      from { transform: scale(0.92); }
+      to { transform: scale(1.08); }
+    }
+    .controls {
+      margin-top: 14px;
+      display: flex;
+      gap: 12px;
+    }
+    .btn {
+      background: #334155;
+      color: white;
+      border: 1px solid #475569;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .btn:hover { background: #475569; }
+  </style>
+</head>
+<body>
+  <div class="top-panel">
+    <div class="status-badge">
+      <div id="disc-ind" class="disc-indicator"></div>
+      <span id="turn-text">Player 1's Turn</span>
+    </div>
+    <div class="mode-switch">
+      <button id="m-cpu" class="mode-btn active">VS AI</button>
+      <button id="m-2p" class="mode-btn">2 PLAYERS</button>
+    </div>
+  </div>
+
+  <div class="board-wrap">
+    <div class="col-row-select" id="arrow-row">
+      <div class="col-arrow">▼</div>
+      <div class="col-arrow">▼</div>
+      <div class="col-arrow">▼</div>
+      <div class="col-arrow">▼</div>
+      <div class="col-arrow">▼</div>
+      <div class="col-arrow">▼</div>
+      <div class="col-arrow">▼</div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <div class="controls">
+    <button id="reset-btn" class="btn">RESTART MATCH</button>
+  </div>
+
+  <script>
+    const ROWS = 6;
+    const COLS = 7;
+    let board = [];
+    let currentPlayer = 1; // 1 = Red, 2 = Yellow
+    let isGameOver = false;
+    let mode = 'cpu'; // 'cpu' or '2p'
+
+    const gridEl = document.getElementById('grid');
+    const discInd = document.getElementById('disc-ind');
+    const turnText = document.getElementById('turn-text');
+    const resetBtn = document.getElementById('reset-btn');
+    const modeCpuBtn = document.getElementById('m-cpu');
+    const mode2pBtn = document.getElementById('m-2p');
+    const arrows = document.querySelectorAll('.col-arrow');
+
+    function init() {
+      board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+      currentPlayer = 1;
+      isGameOver = false;
+      updateTurnUI();
+      render();
+    }
+
+    function updateTurnUI() {
+      if (isGameOver) return;
+      discInd.style.background = currentPlayer === 1 ? '#ef4444' : '#eab308';
+      turnText.textContent = currentPlayer === 1 ? "Red's Turn" : (mode === 'cpu' ? "AI Thinking..." : "Yellow's Turn");
+    }
+
+    function dropDisc(c) {
+      if (isGameOver) return;
+      if (mode === 'cpu' && currentPlayer === 2) return;
+
+      // Find lowest empty row in col c
+      for (let r = ROWS - 1; r >= 0; r--) {
+        if (board[r][c] === 0) {
+          board[r][c] = currentPlayer;
+          const winCombo = checkWin(r, c);
+          if (winCombo) {
+            handleWin(winCombo);
+          } else if (checkDraw()) {
+            handleDraw();
+          } else {
+            currentPlayer = currentPlayer === 1 ? 2 : 1;
+            updateTurnUI();
+            render();
+            if (mode === 'cpu' && currentPlayer === 2 && !isGameOver) {
+              setTimeout(aiTurn, 400);
+            }
+          }
+          render();
+          return;
+        }
+      }
+    }
+
+    function aiTurn() {
+      if (isGameOver) return;
+      // 1. Can AI win immediately?
+      for (let c = 0; c < COLS; c++) {
+        const r = getLowestRow(c);
+        if (r !== -1) {
+          board[r][c] = 2;
+          if (checkWin(r, c)) {
+            handleWin(checkWin(r, c));
+            render();
+            return;
+          }
+          board[r][c] = 0;
+        }
+      }
+
+      // 2. Can player win next move? Block them!
+      for (let c = 0; c < COLS; c++) {
+        const r = getLowestRow(c);
+        if (r !== -1) {
+          board[r][c] = 1;
+          if (checkWin(r, c)) {
+            board[r][c] = 2;
+            const winCombo = checkWin(r, c);
+            if (winCombo) handleWin(winCombo);
+            else {
+              currentPlayer = 1;
+              updateTurnUI();
+            }
+            render();
+            return;
+          }
+          board[r][c] = 0;
+        }
+      }
+
+      // 3. Prefer center column or valid random
+      const preferred = [3, 2, 4, 1, 5, 0, 6];
+      let chosenCol = 3;
+      for (let c of preferred) {
+        if (getLowestRow(c) !== -1) {
+          chosenCol = c;
+          break;
+        }
+      }
+
+      const r = getLowestRow(chosenCol);
+      if (r !== -1) {
+        board[r][chosenCol] = 2;
+        const winCombo = checkWin(r, chosenCol);
+        if (winCombo) {
+          handleWin(winCombo);
+        } else if (checkDraw()) {
+          handleDraw();
+        } else {
+          currentPlayer = 1;
+          updateTurnUI();
+        }
+      }
+      render();
+    }
+
+    function getLowestRow(c) {
+      for (let r = ROWS - 1; r >= 0; r--) {
+        if (board[r][c] === 0) return r;
+      }
+      return -1;
+    }
+
+    function checkWin(r, c) {
+      const p = board[r][c];
+      const directions = [
+        [[0, 1], [0, -1]],   // horizontal
+        [[1, 0], [-1, 0]],   // vertical
+        [[1, 1], [-1, -1]],  // diagonal \
+        [[1, -1], [-1, 1]]   // diagonal /
+      ];
+
+      for (let dir of directions) {
+        const combo = [[r, c]];
+        for (let [dr, dc] of dir) {
+          let step = 1;
+          while (true) {
+            const nr = r + dr * step;
+            const nc = c + dc * step;
+            if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && board[nr][nc] === p) {
+              combo.push([nr, nc]);
+              step++;
+            } else {
+              break;
+            }
+          }
+        }
+        if (combo.length >= 4) return combo;
+      }
+      return null;
+    }
+
+    function checkDraw() {
+      return board.every(row => row.every(cell => cell !== 0));
+    }
+
+    function handleWin(combo) {
+      isGameOver = true;
+      const winnerName = currentPlayer === 1 ? 'Red' : (mode === 'cpu' ? 'AI' : 'Yellow');
+      turnText.textContent = `${winnerName} Wins! 🎉`;
+      combo.forEach(([r, c]) => {
+        const slotEl = document.getElementById(`slot-${r}-${c}`);
+        if (slotEl) slotEl.classList.add('win');
+      });
+    }
+
+    function handleDraw() {
+      isGameOver = true;
+      turnText.textContent = "It's a Draw!";
+    }
+
+    function render() {
+      gridEl.innerHTML = '';
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const div = document.createElement('div');
+          div.className = 'slot';
+          div.id = `slot-${r}-${c}`;
+          const val = board[r][c];
+          if (val > 0) div.setAttribute('data-p', val);
+
+          div.addEventListener('mouseenter', () => {
+            arrows[c]?.classList.add('hover');
+          });
+          div.addEventListener('mouseleave', () => {
+            arrows[c]?.classList.remove('hover');
+          });
+          div.addEventListener('click', () => {
+            dropDisc(c);
+          });
+
+          gridEl.appendChild(div);
+        }
+      }
+    }
+
+    modeCpuBtn.addEventListener('click', () => {
+      mode = 'cpu';
+      modeCpuBtn.classList.add('active');
+      mode2pBtn.classList.remove('active');
+      init();
+    });
+
+    mode2pBtn.addEventListener('click', () => {
+      mode = '2p';
+      mode2pBtn.classList.add('active');
+      modeCpuBtn.classList.remove('active');
+      init();
+    });
+
+    resetBtn.addEventListener('click', init);
+
+    init();
+  </script>
+</body>
+</html>

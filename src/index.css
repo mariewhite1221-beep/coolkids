@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-canvas: #0A0A0A;
+    --bg-surface: #111111;
+    --bg-elevated: #151515;
+    --border-subtle: #222222;
+    --border-hover: #FF3E00;
+    --accent-flame: #FF3E00;
+    --accent-amber: #FFBE00;
+    --text-primary: #F0F0F0;
+    --text-muted: #888888;
+    --text-dim: #555555;
+  }
+
+  body {
+    background-color: #0A0A0A;
+    color: #F0F0F0;
+    font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', monospace, ui-monospace;
+  }
+
+  ::selection {
+    background-color: #FF3E00;
+    color: #000000;
+  }
+}

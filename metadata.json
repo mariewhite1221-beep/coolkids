@@ -1,0 +1,8 @@
+{
+  "name": "Unblocked Games",
+  "description": "A basic unblocked games site running self-contained HTML/JS/CSS games in iframes defined in a JSON catalog.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

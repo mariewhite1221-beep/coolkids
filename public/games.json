@@ -1,0 +1,122 @@
+[
+  {
+    "id": "snake",
+    "title": "Snake Classic",
+    "category": "Arcade",
+    "description": "Control the serpent, gobble apples, and grow longer without slamming into borders or your own body.",
+    "thumbnailIcon": "🐍",
+    "accentColor": "#10b981",
+    "iframeUrl": "/games/snake/index.html",
+    "controls": ["Arrow Keys or WASD to navigate", "Space to Pause", "R to Restart"],
+    "tags": ["arcade", "retro", "classic", "snake"],
+    "featured": true
+  },
+  {
+    "id": "2048",
+    "title": "2048",
+    "category": "Puzzle",
+    "description": "Slide numbered tiles across the 4x4 grid. Merge matching numbers to reach the legendary 2048 tile.",
+    "thumbnailIcon": "🔢",
+    "accentColor": "#f59e0b",
+    "iframeUrl": "/games/2048/index.html",
+    "controls": ["Arrow Keys or WASD to Slide", "Swipe on Touchscreens", "New Game Button"],
+    "tags": ["puzzle", "numbers", "strategy", "2048"],
+    "featured": true
+  },
+  {
+    "id": "pong",
+    "title": "Retro Pong",
+    "category": "Classic",
+    "description": "The arcade classic! Bounce the ball past the opponent's paddle in solo vs CPU or local 2-player battle.",
+    "thumbnailIcon": "🏓",
+    "accentColor": "#06b6d4",
+    "iframeUrl": "/games/pong/index.html",
+    "controls": ["W/S or Up/Down for Player 1", "Up/Down Arrows for Player 2", "1 / 2 for Mode"],
+    "tags": ["classic", "pong", "retro", "2-player"],
+    "featured": true
+  },
+  {
+    "id": "flappy",
+    "title": "Flappy Jet",
+    "category": "Arcade",
+    "description": "Tap or hit space to flap your wings and thrust through pipes with pixel-perfect timing.",
+    "thumbnailIcon": "🛩️",
+    "accentColor": "#3b82f6",
+    "iframeUrl": "/games/flappy/index.html",
+    "controls": ["Spacebar or Left Click to Flap", "P to Pause", "R to Restart"],
+    "tags": ["arcade", "flappy", "endless", "high score"],
+    "featured": true
+  },
+  {
+    "id": "breakout",
+    "title": "Neon Breakout",
+    "category": "Arcade",
+    "description": "Smash your way through vibrant brick walls with your paddle, bounce angles, and ball velocity.",
+    "thumbnailIcon": "🧱",
+    "accentColor": "#ec4899",
+    "iframeUrl": "/games/breakout/index.html",
+    "controls": ["Mouse or Left/Right Arrows to move paddle", "Space to launch ball"],
+    "tags": ["arcade", "breakout", "bricks", "retro"],
+    "featured": true
+  },
+  {
+    "id": "space-invaders",
+    "title": "Galaxy Invaders",
+    "category": "Action",
+    "description": "Defend the planet against waves of descending alien squadrons with laser cannons and protective bunkers.",
+    "thumbnailIcon": "👾",
+    "accentColor": "#8b5cf6",
+    "iframeUrl": "/games/space-invaders/index.html",
+    "controls": ["A/D or Left/Right to steer", "Space to Fire lasers"],
+    "tags": ["action", "space", "shooter", "retro"],
+    "featured": true
+  },
+  {
+    "id": "minesweeper",
+    "title": "Minesweeper",
+    "category": "Puzzle",
+    "description": "Clear the minefield using logic deduction and number clues. Flag mines and uncover safe terrain.",
+    "thumbnailIcon": "💣",
+    "accentColor": "#ef4444",
+    "iframeUrl": "/games/minesweeper/index.html",
+    "controls": ["Left Click to uncover", "Right Click or Long Press to flag", "Smiley to reset"],
+    "tags": ["puzzle", "minesweeper", "logic", "classic"],
+    "featured": false
+  },
+  {
+    "id": "dino-run",
+    "title": "Desert Dino Run",
+    "category": "Arcade",
+    "description": "Jump over cacti and duck beneath low-flying pterodactyls across a shifting desert landscape.",
+    "thumbnailIcon": "🦖",
+    "accentColor": "#84cc16",
+    "iframeUrl": "/games/dino-run/index.html",
+    "controls": ["Space or Up to Jump", "Down Arrow to Duck / Fast Fall"],
+    "tags": ["arcade", "runner", "dino", "infinite"],
+    "featured": true
+  },
+  {
+    "id": "tetris",
+    "title": "Block Matrix",
+    "category": "Classic",
+    "description": "Rotate and drop falling geometric tetrominoes to clear full horizontal lines and rack up high scores.",
+    "thumbnailIcon": "🧱",
+    "accentColor": "#f97316",
+    "iframeUrl": "/games/tetris/index.html",
+    "controls": ["Left/Right to Move", "Up Arrow to Rotate", "Down for Soft Drop", "Space for Hard Drop"],
+    "tags": ["classic", "tetris", "puzzle", "arcade"],
+    "featured": true
+  },
+  {
+    "id": "connect4",
+    "title": "Connect Four",
+    "category": "Puzzle",
+    "description": "Drop your tokens into the 7-column vertical grid to align 4 consecutive discs before your opponent.",
+    "thumbnailIcon": "🔴",
+    "accentColor": "#6366f1",
+    "iframeUrl": "/games/connect4/index.html",
+    "controls": ["Click or Tap column to drop disc", "Play vs AI or Local 2-Player"],
+    "tags": ["puzzle", "board game", "strategy", "connect4"],
+    "featured": false
+  }
+]
